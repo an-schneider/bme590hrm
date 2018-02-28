@@ -1,14 +1,18 @@
 filename = 'test_data1.csv'
-def import_data():
+def import_csv_data(filename):
     import csv
+    import matplotlib.pyplot as plt
     with open(filename, 'r') as my_data:
-        csv_reader = csv.reader(my_data)
-
-        for reading in my_data:
-            time = reading[0]
-            voltage = reading[1]
+        csv_reader = csv.reader(my_data, delimiter=',')
+        time = []
+        voltage = []
+        for n, reading in enumerate(csv_reader):
+            time.append(float(reading[0]))
+            voltage.append(float(reading[1]))
     return time, voltage
 
+
+time, voltage = import_csv_data(filename)
 
 class HeartRateData:
     def __init__(self, time, voltage):
@@ -17,6 +21,13 @@ class HeartRateData:
 
     def visualize(self):
         import pandas
-        import matplot.pyplot as pl
+        import matplotlib.pyplot as plt
+        plt.plot(self.timevals, self.voltagevals)
+        print(self.timevals)
+        plt.show()
+
+
+Data1 = HeartRateData(time, voltage)
+Data1.visualize()
 
 
