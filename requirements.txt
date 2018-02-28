@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 pandas
+=======
+pandas
+matplotlib
+>>>>>>> ans52/import_data
