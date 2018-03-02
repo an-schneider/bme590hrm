@@ -1,17 +1,24 @@
+# Set up logger
 import logging
+log_format = '%(levelname)s %(asctime)s %(message)s'
+logging.basicConfig(filename='divlog.txt', format=log_format,
+                    datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG,
+                    filemode='w')
+logger = logging.getLogger()
 
 # Specify the type of file being imported
 # Options: .csv
 file_type = '.csv'
 
 # Insert desired file path and file name here
-file_name = 'test_data5'
+file_name = 'test_data10'
 path = '/Users/AnthonySchneider/Desktop/bme590hrm/test_data/'
 file = path + file_name + file_type
+logger.info('Intended File Path: %s' % file)
 
 # Insert the voltage units in the incoming file
 VoltUnit = 'mV'
-
+logger.info('Specified Units: %s' % VoltUnit)
 
 def import_csv_data(import_file):
     """Import ECG voltage and times from a csv file
@@ -32,6 +39,7 @@ def import_csv_data(import_file):
 
 if file_type is '.csv':
     time, voltage = import_csv_data(file)
+    logger.info('.CSV File Successfully Imported')
 
 
 class HeartRateData: # remember to have option to set units
@@ -67,7 +75,7 @@ class HeartRateData: # remember to have option to set units
         x = self.voltagevals
         autocorr = (numpy.correlate(x, x, mode='full'))
         autocorr = autocorr[len(autocorr)//2:]
-
+        logger.info('Autocorrelation Complete')
         return autocorr
 
     def find_interval(self):
@@ -93,6 +101,7 @@ class HeartRateData: # remember to have option to set units
         # Time to second peak in autocorr rep. one period
         interval_time_index = peaks_indices[1]
         interval = self.timevals[interval_time_index]
+        logger.info('Calculated time interval between R peaks: %s sec' % interval)
         return interval
 
     def count_beats(self):
@@ -138,6 +147,8 @@ class HeartRateData: # remember to have option to set units
         self.beat_times = beats
         print('Number of Beats Detected: %s' % num_beats)
         print('Times at which beats were detected: %s sec' % str(beats))
+        logger.info('Number of beats detected: %s' % num_beats)
+        logger.info('Times at which beats occurred: %s sec' % str(beats))
 
         # Graph each "search bin" and mark maxima
         # for i in range(1,num_intervals+1): Uncomment for visual representation of the 'bins'
@@ -150,6 +161,7 @@ class HeartRateData: # remember to have option to set units
         plt.grid()
         plt.title('ECG Reading: %s' % file_name+file_type)
         plt.show()
+        logger.info('Data plotted with marked peaks')
         return num_beats, beats
 
     def get_voltage_extremes(self):
@@ -163,6 +175,8 @@ class HeartRateData: # remember to have option to set units
         voltage_extremes = (min_voltage, max_voltage)
         # Need to change the units depending on user input
         print('Minimum Lead Voltage: %s mV, Maximum Lead Voltage: %s mV' % voltage_extremes)
+        logger.info('Minimum Lead Voltage: %s %s, Maximum Lead Voltage: %s %s' % (min_voltage, VoltUnit, max_voltage,
+                                                                                  VoltUnit))
         return voltage_extremes
 
     def get_duration(self):
@@ -174,6 +188,7 @@ class HeartRateData: # remember to have option to set units
         time_duration = max(self.timevals)
         self.duration = time_duration
         print('ECG Reading Duration: %s sec' % time_duration)
+        logger.info('ECG Reading Duration: %s sec' % time_duration)
         return time_duration
 
     def get_mean_hr_bpm(self):
@@ -187,6 +202,7 @@ class HeartRateData: # remember to have option to set units
         avg_hr_bpm = int(avg_hr_bps*60)
         self.mean_hr_bpm = avg_hr_bpm
         print('Average Heart Rate: %s BPM' % avg_hr_bpm)
+        logger.info('Average Heart Rate: %s BPM' % avg_hr_bpm)
         return avg_hr_bpm
 
     def write_json(self, dictionary):
@@ -198,6 +214,7 @@ class HeartRateData: # remember to have option to set units
         import json
         with open(path+file_name+'.json', 'w') as outfile:
             json.dump(dictionary, outfile)
+        logger.info('Calculated data written to %s' % file_name+'.json')
 
     def main(self):
         num_beats, beats = self.count_beats()
