@@ -3,13 +3,16 @@
 file_type = '.csv'
 
 # Insert desired file path and file name here
-file_name = 'test_data32'
+file_name = 'test_data5'
 path = '/Users/AnthonySchneider/Desktop/bme590hrm/test_data/'
 file = path + file_name + file_type
 
+# Insert the voltage units in the incoming file
+VoltUnit = 'mV'
+
+
 def import_csv_data(file):
     import csv
-    import matplotlib.pyplot as plt
     with open(file, 'r') as my_data:
         csv_reader = csv.reader(my_data, delimiter=',')
         time = []
@@ -22,6 +25,7 @@ def import_csv_data(file):
 
 if file_type is '.csv':
     time, voltage = import_csv_data(file)
+
 
 class HeartRateData:  # remember to have option to set units
     def __init__(self, time, voltage, num_beats=None, beat_times=None, duration=None, mean_hr_bpm=None):
@@ -41,9 +45,6 @@ class HeartRateData:  # remember to have option to set units
 
     def autocorrelate(self):
         import numpy
-        import matplotlib.pyplot as plt
-        import peakutils
-        import scipy.signal
         x = self.voltagevals
         autocorr = (numpy.correlate(x, x, mode='full'))
         autocorr_sqd = autocorr**2
@@ -53,16 +54,17 @@ class HeartRateData:  # remember to have option to set units
 
     def find_interval(self):
         import numpy
-        import matplotlib.pyplot as plt
         import scipy.signal
         data = self.autocorrelate()
-        peaks_indices = scipy.signal.find_peaks_cwt(data,numpy.arange(5,10),min_snr=2)
+        peaks_indices = scipy.signal.find_peaks_cwt(data, numpy.arange(5, 10), min_snr=2)
         max_values = []
-        for n,i in enumerate(peaks_indices):
-           max_values.append(data[i])
-        plt.plot(data)
-        plt.scatter(peaks_indices, max_values,marker='x', c='red')
-        plt.show()
+        for n, i in enumerate(peaks_indices):
+            max_values.append(data[i])
+
+        # plt.plot(data)
+        # plt.scatter(peaks_indices, max_values,marker='x', c='red')
+        # plt.show()
+
         # Time to second peak in autocorr rep. one period
         interval_time_index = peaks_indices[1]
         interval = self.timevals[interval_time_index]
@@ -78,14 +80,14 @@ class HeartRateData:  # remember to have option to set units
 
         # Create interval "search bins" to find peaks
         bin_ends = []
-        for i in range(1,num_intervals+1):
+        for i in range(1, num_intervals+1):
             bin_ends.append((i*interval_indices)-1)
         bin_ends.append(len(self.voltagevals))
         start = 0
         peak_val = []
         peak_val_index= []
 
-        for n,i in enumerate(bin_ends):
+        for n, i in enumerate(bin_ends):
             bin = self.voltagevals[start:i]
             peak_val.append(max(bin))
             peak_val_location = start + bin.index(peak_val[n])
@@ -105,11 +107,15 @@ class HeartRateData:  # remember to have option to set units
         print('Times at which beats were detected: %s sec' % str(beats))
 
         # Graph each "search bin" and mark maxima
-        #for i in range(1,num_intervals+1): Uncomment for visual representation of the 'bins'
+        # for i in range(1,num_intervals+1): Uncomment for visual representation of the 'bins'
         #    plt.axvline(i*interval_sec,c='red',)
 
         plt.plot(self.timevals, self.voltagevals)
+        plt.xlabel('Time (sec)')
+        plt.ylabel('Voltage (%s)' % VoltUnit)
         plt.scatter(peak_val_times, peak_val, marker='x', c='red')
+        plt.grid()
+        plt.title('ECG Reading: %s' % file_name+file_type)
         plt.show()
         return num_beats, beats
 
@@ -136,12 +142,10 @@ class HeartRateData:  # remember to have option to set units
 
     def write_json(self, dictionary):
         import json
-        with open(file_name+'.json', 'w') as outfile:
+        with open(path+file_name+'.json', 'w') as outfile:
             json.dump(dictionary, outfile)
 
-
     def main(self):
-        self.visualize()
         num_beats, beats = self.count_beats()
         voltage_extremes = self.get_voltage_extremes()
         time_duration = self.get_duration()
@@ -153,7 +157,6 @@ class HeartRateData:  # remember to have option to set units
                        "Number of Beats": num_beats,
                        "Beat Times": str(beats)}
         self.write_json(ECG_outputs)
-
 
 
 DataSet = HeartRateData(time, voltage)
