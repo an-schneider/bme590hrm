@@ -1,7 +1,5 @@
-
-
-filename = '/Users/AnthonySchneider/Desktop/bme590hrm/test_data/test_data1.csv'
-
+# Insert desired file path here
+filename = '/Users/AnthonySchneider/Desktop/bme590hrm/test_data/test_data10.csv'
 
 def import_csv_data(filename):
     import csv
@@ -18,9 +16,13 @@ def import_csv_data(filename):
 time, voltage = import_csv_data(filename)
 
 class HeartRateData:  # remember to have option to set units
-    def __init__(self, time, voltage):
+    def __init__(self, time, voltage, num_beats=None, beat_times=None, duration=None, mean_hr_bpm=None):
         self.timevals = time
         self.voltagevals = voltage
+        self.num_beats = num_beats
+        self.beat_times = beat_times
+        self.duration = duration
+        self.mean_hr_bpm = mean_hr_bpm
 
     def visualize(self):
         import matplotlib.pyplot as plt
@@ -89,6 +91,8 @@ class HeartRateData:  # remember to have option to set units
         # Collect Desired Values
         num_beats = len(peak_val)
         beats = numpy.array(peak_val_times)
+        self.num_beats = num_beats
+        self.beat_times = beats
         print('Number of Beats Detected: %s' % num_beats)
         print('Times at which beats were detected: %s sec' % str(beats))
 
@@ -108,23 +112,24 @@ class HeartRateData:  # remember to have option to set units
         print('Minimum Lead Voltage: %s mV, Maximum Lead Voltage: %s mV' % voltage_extremes)
         return voltage_extremes
 
-    def duration(self):
+    def get_duration(self):
         time_duration = max(self.timevals)
+        self.duration = time_duration
         print('ECG Reading Duration: %s sec' % time_duration)
         return time_duration
 
-
-
-
-
-
-
+    def get_mean_hr_bpm(self):
+        avg_hr_bps = self.num_beats/self.duration
+        avg_hr_bpm = int(avg_hr_bps*60)
+        self.mean_hr_bpm = avg_hr_bpm
+        print('Average Heart Rate: %s BPM' % avg_hr_bpm)
+        return avg_hr_bpm
 
 Data1 = HeartRateData(time, voltage)
 Data1.voltage_extremes()
-Data1.duration()
+Data1.get_duration()
 Data1.count_beats()
-
+Data1.get_mean_hr_bpm()
 
 
 
