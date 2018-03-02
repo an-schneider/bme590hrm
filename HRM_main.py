@@ -12,11 +12,11 @@ try:
 except ImportError:
     print('Please install numpy')
     logger.error('numpy not installed in virtual environment')
-try:                                            # Comment out when testing
-    import matplotlib.pyplot as plt             # Comment out when testing
-except ImportError:                             # Comment out when testing
-    print('Please install matplotlib')          # Comment out when testing
-    logger.error('matplotlib not installed in virtual environment') # Comment out when testing
+#try:                                            # Comment out when testing
+#    import matplotlib.pyplot as plt             # Comment out when testing
+#except ImportError:                             # Comment out when testing
+#    print('Please install matplotlib')          # Comment out when testing
+#    logger.error('matplotlib not installed in virtual environment') # Comment out when testing
 try:
     import scipy.signal
 except ImportError:
@@ -171,14 +171,14 @@ class HeartRateData:
         # for i in range(1,num_intervals+1): Uncomment for visual representation of the 'bins'
         #    plt.axvline(i*interval_sec,c='red',)
 
-        plt.plot(self.timevals, self.voltagevals)                   # Comment out when testing
-        plt.xlabel('Time (sec)')                                    # Comment out when testing
-        plt.ylabel('Voltage (%s)' % VoltUnit)                       # Comment out when testing
-        plt.scatter(peak_val_times, peak_val, marker='x', c='red')  # Comment out when testing
-        plt.grid()                                                  # Comment out when testing
-        plt.title('ECG Reading: %s' % file_name+file_type)          # Comment out when testing
-        plt.show()                                                  # Comment out when testing
-        logger.info('Data plotted with marked peaks')
+        # plt.plot(self.timevals, self.voltagevals)                   # Comment out when testing
+        # plt.xlabel('Time (sec)')                                    # Comment out when testing
+        # plt.ylabel('Voltage (%s)' % VoltUnit)                       # Comment out when testing
+        # plt.scatter(peak_val_times, peak_val, marker='x', c='red')  # Comment out when testing
+        # plt.grid()                                                  # Comment out when testing
+        # plt.title('ECG Reading: %s' % file_name+file_type)          # Comment out when testing
+        # plt.show()                                                  # Comment out when testing
+        # logger.info('Data plotted with marked peaks')
         return num_beats, beats
 
     def get_voltage_extremes(self):
