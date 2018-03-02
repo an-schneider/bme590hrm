@@ -12,11 +12,11 @@ try:
 except ImportError:
     print('Please install numpy')
     logger.error('numpy not installed in virtual environment')
-try:
-    import matplotlib.pyplot as plt
-except ImportError:
-    print('Please install matplotlib')
-    logger.error('matplotlib not installed in virtual environment')
+try:                                            # Comment out when testing
+    import matplotlib.pyplot as plt             # Comment out when testing
+except ImportError:                             # Comment out when testing
+    print('Please install matplotlib')          # Comment out when testing
+    logger.error('matplotlib not installed in virtual environment') # Comment out when testing
 try:
     import scipy.signal
 except ImportError:
@@ -28,7 +28,7 @@ except ImportError:
 file_type = '.csv'
 
 # Insert desired file path and file name here
-file_name = 'test_data10'
+file_name = 'test_data1'
 path = '/Users/AnthonySchneider/Desktop/bme590hrm/test_data/'
 file = path + file_name + file_type
 logger.info('Intended File Path: %s' % file)
@@ -63,7 +63,7 @@ else:
     raise TypeError('The input file type is not supported by this version of the software')
 
 class HeartRateData: # remember to have option to set units
-    def __init__(self, time, voltage, units=None, num_beats=None, beat_times=None, duration=None, mean_hr_bpm=None):
+    def __init__(self, time, voltage, voltmin=None, voltmax=None, units=None, num_beats=None, beat_times=None, duration=None, mean_hr_bpm=None):
         self.timevals = time
         self.voltagevals = voltage
         self.units = units
@@ -71,6 +71,8 @@ class HeartRateData: # remember to have option to set units
         self.beat_times = beat_times
         self.duration = duration
         self.mean_hr_bpm = mean_hr_bpm
+        self.voltmin = voltmin
+        self.voltmax = voltmax
 
     def visualize(self):
         """Generates simple plot of raw ECG Data
@@ -79,10 +81,10 @@ class HeartRateData: # remember to have option to set units
         :param: self.voltagevals: list of voltages from imported file
         """
 
-        plt.plot(self.timevals, self.voltagevals)
-        plt.xlabel('Time')
-        plt.ylabel('Voltage (%s)' % self.units)
-        plt.show()
+        #plt.plot(self.timevals, self.voltagevals)    # Comment out when testing
+        #plt.xlabel('Time')                           # Comment out when testing
+        #plt.ylabel('Voltage (%s)' % self.units)      # Comment out when testing
+        #plt.show()                                   # Comment out when testing
 
     def autocorrelate(self):
         """Calculates autocorrelation of input data
@@ -111,9 +113,9 @@ class HeartRateData: # remember to have option to set units
         for n, i in enumerate(peaks_indices):
             max_values.append(data[i])
 
-        # plt.plot(data)
-        # plt.scatter(peaks_indices, max_values,marker='x', c='red')
-        # plt.show()
+        #plt.plot(data)                                             # Comment out when testing
+        #plt.scatter(peaks_indices, max_values,marker='x', c='red') # Comment out when testing
+        #plt.show()                                                 # Comment out when testing
 
         # Time to second peak in autocorr rep. one period
         interval_time_index = peaks_indices[1]
@@ -168,13 +170,13 @@ class HeartRateData: # remember to have option to set units
         # for i in range(1,num_intervals+1): Uncomment for visual representation of the 'bins'
         #    plt.axvline(i*interval_sec,c='red',)
 
-        plt.plot(self.timevals, self.voltagevals)
-        plt.xlabel('Time (sec)')
-        plt.ylabel('Voltage (%s)' % VoltUnit)
-        plt.scatter(peak_val_times, peak_val, marker='x', c='red')
-        plt.grid()
-        plt.title('ECG Reading: %s' % file_name+file_type)
-        plt.show()
+        plt.plot(self.timevals, self.voltagevals)                  # Comment out when testing
+        plt.xlabel('Time (sec)')                                   # Comment out when testing
+        plt.ylabel('Voltage (%s)' % VoltUnit)                      # Comment out when testing
+        plt.scatter(peak_val_times, peak_val, marker='x', c='red') # Comment out when testing
+        plt.grid()                                                 # Comment out when testing
+        plt.title('ECG Reading: %s' % file_name+file_type)         # Comment out when testing
+        plt.show()                                                 # Comment out when testing
         logger.info('Data plotted with marked peaks')
         return num_beats, beats
 
@@ -191,6 +193,8 @@ class HeartRateData: # remember to have option to set units
         print('Minimum Lead Voltage: %s mV, Maximum Lead Voltage: %s mV' % voltage_extremes)
         logger.info('Minimum Lead Voltage: %s %s, Maximum Lead Voltage: %s %s' % (min_voltage, VoltUnit, max_voltage,
                                                                                   VoltUnit))
+        self.voltmin = min_voltage
+        self.voltmax = max_voltage
         return voltage_extremes
 
     def get_duration(self):
@@ -250,6 +254,7 @@ class HeartRateData: # remember to have option to set units
 
 DataSet = HeartRateData(time, voltage, units=VoltUnit)
 DataSet.main()
+
 
 
 
