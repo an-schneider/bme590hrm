@@ -60,6 +60,7 @@ class HeartRateData:  # remember to have option to set units
 
     def count_beats(self):
         import matplotlib.pyplot as plt
+        import numpy
 
         interval_sec = self.find_interval()
         interval_indices = self.timevals.index(interval_sec)
@@ -87,7 +88,7 @@ class HeartRateData:  # remember to have option to set units
 
         # Collect Desired Values
         num_beats = len(peak_val)
-        beats = peak_val_times
+        beats = numpy.array(peak_val_times)
         print('Number of Beats Detected: %s' % num_beats)
         print('Times at which beats were detected: %s sec' % str(beats))
 
