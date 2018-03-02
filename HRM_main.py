@@ -100,6 +100,11 @@ class HeartRateData:  # remember to have option to set units
         print('Minimum Lead Voltage: %s mV, Maximum Lead Voltage: %s mV' % voltage_extremes)
         return voltage_extremes
 
+    def duration(self):
+        time_duration = max(self.timevals)
+        print('ECG Reading Duration: %s sec' % time_duration)
+        return time_duration
+
 
 
 
@@ -109,6 +114,7 @@ class HeartRateData:  # remember to have option to set units
 
 Data1 = HeartRateData(time, voltage)
 Data1.voltage_extremes()
+Data1.duration()
 
 
 
