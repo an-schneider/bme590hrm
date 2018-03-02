@@ -1,6 +1,6 @@
 
 
-filename = '/Users/AnthonySchneider/Desktop/bme590hrm/test_data/test_data5.csv'
+filename = '/Users/AnthonySchneider/Desktop/bme590hrm/test_data/test_data7.csv'
 
 
 def import_csv_data(filename):
@@ -69,7 +69,7 @@ class HeartRateData:  # remember to have option to set units
         bin_ends = []
         for i in range(1,num_intervals+1):
             bin_ends.append((i*interval_indices)-1)
-
+        bin_ends.append(len(self.voltagevals))
         start = 0
         peak_val = []
         peak_val_index= []
@@ -92,6 +92,14 @@ class HeartRateData:  # remember to have option to set units
         plt.scatter(peak_val_times, peak_val, marker='x', c='red')
         plt.show()
 
+    def voltage_extremes(self):
+        min_voltage = min(self.voltagevals)
+        max_voltage = max(self.voltagevals)
+        voltage_extremes = (min_voltage, max_voltage)
+        # Need to change the units depending on user input
+        print('Minimum Lead Voltage: %s mV, Maximum Lead Voltage: %s mV' % voltage_extremes)
+        return voltage_extremes
+
 
 
 
@@ -100,8 +108,7 @@ class HeartRateData:  # remember to have option to set units
 
 
 Data1 = HeartRateData(time, voltage)
-Data1.visualize()
-Data1.count_beats()
+Data1.voltage_extremes()
 
 
 
