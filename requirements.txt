@@ -1,6 +1,6 @@
 numpy
 matplotlib
-spicy
+scipy
 pytest
 
 
