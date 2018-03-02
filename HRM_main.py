@@ -1,10 +1,16 @@
-# Insert desired file path here
-filename = '/Users/AnthonySchneider/Desktop/bme590hrm/test_data/test_data10.csv'
+# Specify the type of file being imported
+# Options: .csv
+file_type = '.csv'
 
-def import_csv_data(filename):
+# Insert desired file path and file name here
+file_name = 'test_data32'
+path = '/Users/AnthonySchneider/Desktop/bme590hrm/test_data/'
+file = path + file_name + file_type
+
+def import_csv_data(file):
     import csv
     import matplotlib.pyplot as plt
-    with open(filename, 'r') as my_data:
+    with open(file, 'r') as my_data:
         csv_reader = csv.reader(my_data, delimiter=',')
         time = []
         voltage = []
@@ -13,7 +19,9 @@ def import_csv_data(filename):
             voltage.append(float(reading[1]))
     return time, voltage
 
-time, voltage = import_csv_data(filename)
+
+if file_type is '.csv':
+    time, voltage = import_csv_data(file)
 
 class HeartRateData:  # remember to have option to set units
     def __init__(self, time, voltage, num_beats=None, beat_times=None, duration=None, mean_hr_bpm=None):
@@ -99,12 +107,13 @@ class HeartRateData:  # remember to have option to set units
         # Graph each "search bin" and mark maxima
         #for i in range(1,num_intervals+1): Uncomment for visual representation of the 'bins'
         #    plt.axvline(i*interval_sec,c='red',)
+
         plt.plot(self.timevals, self.voltagevals)
         plt.scatter(peak_val_times, peak_val, marker='x', c='red')
         plt.show()
         return num_beats, beats
 
-    def voltage_extremes(self):
+    def get_voltage_extremes(self):
         min_voltage = min(self.voltagevals)
         max_voltage = max(self.voltagevals)
         voltage_extremes = (min_voltage, max_voltage)
@@ -125,11 +134,30 @@ class HeartRateData:  # remember to have option to set units
         print('Average Heart Rate: %s BPM' % avg_hr_bpm)
         return avg_hr_bpm
 
-Data1 = HeartRateData(time, voltage)
-Data1.voltage_extremes()
-Data1.get_duration()
-Data1.count_beats()
-Data1.get_mean_hr_bpm()
+    def write_json(self, dictionary):
+        import json
+        with open(file_name+'.json', 'w') as outfile:
+            json.dump(dictionary, outfile)
+
+
+    def main(self):
+        self.visualize()
+        num_beats, beats = self.count_beats()
+        voltage_extremes = self.get_voltage_extremes()
+        time_duration = self.get_duration()
+        avg_hr_bpm = self.get_mean_hr_bpm()
+        ECG_outputs = {"Mean Heart Rate BPM": avg_hr_bpm,
+                       "Minimum Voltage": voltage_extremes[0],
+                       "Maximum Voltage": voltage_extremes[1],
+                       "Duration of Reading": time_duration,
+                       "Number of Beats": num_beats,
+                       "Beat Times": str(beats)}
+        self.write_json(ECG_outputs)
+
+
+
+DataSet = HeartRateData(time, voltage)
+DataSet.main()
 
 
 
