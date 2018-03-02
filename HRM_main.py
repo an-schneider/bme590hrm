@@ -1,6 +1,6 @@
 
 
-filename = '/Users/AnthonySchneider/Desktop/bme590hrm/test_data/test_data7.csv'
+filename = '/Users/AnthonySchneider/Desktop/bme590hrm/test_data/test_data1.csv'
 
 
 def import_csv_data(filename):
@@ -46,7 +46,7 @@ class HeartRateData:  # remember to have option to set units
         import matplotlib.pyplot as plt
         import scipy.signal
         data = self.autocorrelate()
-        peaks_indices = scipy.signal.find_peaks_cwt(data,numpy.arange(5,10),min_snr=4)
+        peaks_indices = scipy.signal.find_peaks_cwt(data,numpy.arange(5,10),min_snr=2)
         max_values = []
         for n,i in enumerate(peaks_indices):
            max_values.append(data[i])
@@ -60,6 +60,7 @@ class HeartRateData:  # remember to have option to set units
 
     def count_beats(self):
         import matplotlib.pyplot as plt
+        import numpy
 
         interval_sec = self.find_interval()
         interval_indices = self.timevals.index(interval_sec)
@@ -85,12 +86,19 @@ class HeartRateData:  # remember to have option to set units
         for i in peak_val_index:
             peak_val_times.append(self.timevals[i])
 
+        # Collect Desired Values
+        num_beats = len(peak_val)
+        beats = numpy.array(peak_val_times)
+        print('Number of Beats Detected: %s' % num_beats)
+        print('Times at which beats were detected: %s sec' % str(beats))
+
         # Graph each "search bin" and mark maxima
-        for i in range(1,num_intervals+1):
-            plt.axvline(i*interval_sec,c='red')
+        #for i in range(1,num_intervals+1): Uncomment for visual representation of the 'bins'
+        #    plt.axvline(i*interval_sec,c='red',)
         plt.plot(self.timevals, self.voltagevals)
         plt.scatter(peak_val_times, peak_val, marker='x', c='red')
         plt.show()
+        return num_beats, beats
 
     def voltage_extremes(self):
         min_voltage = min(self.voltagevals)
@@ -115,6 +123,7 @@ class HeartRateData:  # remember to have option to set units
 Data1 = HeartRateData(time, voltage)
 Data1.voltage_extremes()
 Data1.duration()
+Data1.count_beats()
 
 
 
