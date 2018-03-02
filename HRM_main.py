@@ -254,8 +254,3 @@ class HeartRateData: # remember to have option to set units
 
 DataSet = HeartRateData(time, voltage, units=VoltUnit)
 DataSet.main()
-
-
-
-
-
