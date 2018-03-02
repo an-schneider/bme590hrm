@@ -6,6 +6,23 @@ logging.basicConfig(filename='divlog.txt', format=log_format,
                     filemode='w')
 logger = logging.getLogger()
 
+# Import necessary modules
+try:
+    import numpy
+except ImportError:
+    print('Please install numpy')
+    logger.error('numpy not installed in virtual environment')
+try:
+    import matplotlib.pyplot as plt
+except ImportError:
+    print('Please install matplotlib')
+    logger.error('matplotlib not installed in virtual environment')
+try:
+    import scipy.signal
+except ImportError:
+    print('Please install scipy')
+    logger.error('Scipy not installed in virtual environment')
+
 # Specify the type of file being imported
 # Options: .csv
 file_type = '.csv'
@@ -19,6 +36,7 @@ logger.info('Intended File Path: %s' % file)
 # Insert the voltage units in the incoming file
 VoltUnit = 'mV'
 logger.info('Specified Units: %s' % VoltUnit)
+
 
 def import_csv_data(import_file):
     """Import ECG voltage and times from a csv file
@@ -40,6 +58,9 @@ def import_csv_data(import_file):
 if file_type is '.csv':
     time, voltage = import_csv_data(file)
     logger.info('.CSV File Successfully Imported')
+else:
+    raise TypeError('The input file type is not supported by this version of the software')
+    logger.error('Input file type not supported')
 
 
 class HeartRateData: # remember to have option to set units
@@ -58,7 +79,6 @@ class HeartRateData: # remember to have option to set units
         :param: self.voltagevals: list of voltages from imported file
         """
 
-        import matplotlib.pyplot as plt
         plt.plot(self.timevals, self.voltagevals)
         plt.xlabel('Time')
         plt.ylabel('Voltage')
@@ -71,7 +91,6 @@ class HeartRateData: # remember to have option to set units
         :returns: autocorrelated data
         """
 
-        import numpy
         x = self.voltagevals
         autocorr = (numpy.correlate(x, x, mode='full'))
         autocorr = autocorr[len(autocorr)//2:]
@@ -85,8 +104,6 @@ class HeartRateData: # remember to have option to set units
         :returns: interval: interval in seconds between the first two R peaks
         """
 
-        import numpy
-        import scipy.signal
         data = self.autocorrelate()
         data = data**2
         peaks_indices = scipy.signal.find_peaks_cwt(data, numpy.arange(5, 10), min_snr=2)
@@ -112,9 +129,6 @@ class HeartRateData: # remember to have option to set units
         :param: self.timevals: list of times from imported file
         :returns: num_beats: number of beats counted in the ECG recording
         :returns: beats: array containing the times at which these beats occurred """
-
-        import matplotlib.pyplot as plt
-        import numpy
 
         interval_sec = self.find_interval()
         interval_indices = self.timevals.index(interval_sec)
