@@ -59,14 +59,14 @@ if file_type is '.csv':
     time, voltage = import_csv_data(file)
     logger.info('.CSV File Successfully Imported')
 else:
-    raise TypeError('The input file type is not supported by this version of the software')
     logger.error('Input file type not supported')
-
+    raise TypeError('The input file type is not supported by this version of the software')
 
 class HeartRateData: # remember to have option to set units
-    def __init__(self, time, voltage, num_beats=None, beat_times=None, duration=None, mean_hr_bpm=None):
+    def __init__(self, time, voltage, units=None, num_beats=None, beat_times=None, duration=None, mean_hr_bpm=None):
         self.timevals = time
         self.voltagevals = voltage
+        self.units = units
         self.num_beats = num_beats
         self.beat_times = beat_times
         self.duration = duration
@@ -81,7 +81,7 @@ class HeartRateData: # remember to have option to set units
 
         plt.plot(self.timevals, self.voltagevals)
         plt.xlabel('Time')
-        plt.ylabel('Voltage')
+        plt.ylabel('Voltage (%s)' % self.units)
         plt.show()
 
     def autocorrelate(self):
@@ -215,6 +215,10 @@ class HeartRateData: # remember to have option to set units
         avg_hr_bps = self.num_beats/self.duration
         avg_hr_bpm = int(avg_hr_bps*60)
         self.mean_hr_bpm = avg_hr_bpm
+        if avg_hr_bpm > 180:
+            logger.warning('Heart rate is abnormally high (>180 BPM)')
+        if avg_hr_bpm < 40:
+            logger.warning('Heart rate is abnormally low (<40 BPM)')
         print('Average Heart Rate: %s BPM' % avg_hr_bpm)
         logger.info('Average Heart Rate: %s BPM' % avg_hr_bpm)
         return avg_hr_bpm
@@ -236,15 +240,15 @@ class HeartRateData: # remember to have option to set units
         time_duration = self.get_duration()
         avg_hr_bpm = self.get_mean_hr_bpm()
         ECG_outputs = {"Mean Heart Rate BPM": avg_hr_bpm,
-                       "Minimum Voltage": voltage_extremes[0],
-                       "Maximum Voltage": voltage_extremes[1],
+                       "Minimum Voltage (%s)" % self.units: voltage_extremes[0],
+                       "Maximum Voltage (%s)" % self.units: voltage_extremes[1],
                        "Duration of Reading": time_duration,
                        "Number of Beats": num_beats,
                        "Beat Times": str(beats)}
         self.write_json(ECG_outputs)
 
 
-DataSet = HeartRateData(time, voltage)
+DataSet = HeartRateData(time, voltage, units=VoltUnit)
 DataSet.main()
 
 
