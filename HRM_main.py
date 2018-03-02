@@ -12,11 +12,12 @@ try:
 except ImportError:
     print('Please install numpy')
     logger.error('numpy not installed in virtual environment')
-#try:                                            # Comment out when testing
+# try:                                            # Comment out when testing
 #    import matplotlib.pyplot as plt             # Comment out when testing
-#except ImportError:                             # Comment out when testing
+# except ImportError:                             # Comment out when testing
 #    print('Please install matplotlib')          # Comment out when testing
-#    logger.error('matplotlib not installed in virtual environment') # Comment out when testing
+#    logger.error('matplotlib not installed in virtual environment') # Comment
+
 try:
     import scipy.signal
 except ImportError:
@@ -60,11 +61,13 @@ if file_type is '.csv':
     logger.info('.CSV File Successfully Imported')
 else:
     logger.error('Input file type not supported')
-    raise TypeError('The input file type is not supported by this version of the software')
+    raise TypeError('The input file type is not supported by '
+                    'this version of the software')
 
 
 class HeartRateData:
-    def __init__(self, time, voltage, voltmin=None, voltmax=None, units=None, num_beats=None, beat_times=None, duration=None, mean_hr_bpm=None):
+    def __init__(self, time, voltage, voltmin=None, voltmax=None,
+                 units=None, num_beats=None, beat_times=None, duration=None, mean_hr_bpm=None):
         self.timevals = time
         self.voltagevals = voltage
         self.units = units
@@ -101,7 +104,8 @@ class HeartRateData:
         return autocorr
 
     def find_interval(self):
-        """Finds interval between first two R peaks of QRS complex using autocorrelate method
+        """Finds interval between first two R peaks of QRS complex
+        using autocorrelate method
 
         :param: self.voltagevals: list of voltages from imported file
         :returns: interval: interval in seconds between the first two R peaks
@@ -109,19 +113,21 @@ class HeartRateData:
 
         data = self.autocorrelate()
         data = data**2
-        peaks_indices = scipy.signal.find_peaks_cwt(data, numpy.arange(5, 10), min_snr=2)
+        peaks_indices = scipy.signal.find_peaks_cwt(data, numpy.arange(5, 10),
+                                                    min_snr=2)
         max_values = []
         for n, i in enumerate(peaks_indices):
             max_values.append(data[i])
 
-        # plt.plot(data)                                             # Comment out when testing
-        # plt.scatter(peaks_indices, max_values,marker='x', c='red') # Comment out when testing
-        # plt.show()                                                 # Comment out when testing
+        # plt.plot(data)                 # Comment out when testing
+        # plt.scatter(peaks_indices, max_values,marker='x', c='red')
+        # plt.show()                     # Comment out when testing
 
         # Time to second peak in autocorr rep. one period
         interval_time_index = peaks_indices[1]
         interval = self.timevals[interval_time_index]
-        logger.info('Calculated time interval between R peaks: %s sec' % interval)
+        logger.info('Calculated time interval between R peaks: %s '
+                    'sec' % interval)
         return interval
 
     def count_beats(self):
@@ -168,16 +174,17 @@ class HeartRateData:
         logger.info('Times at which beats occurred: %s sec' % str(beats))
 
         # Graph each "search bin" and mark maxima
-        # for i in range(1,num_intervals+1): Uncomment for visual representation of the 'bins'
+        # for i in range(1,num_intervals+1): Uncomment for visual of the 'bins'
         #    plt.axvline(i*interval_sec,c='red',)
 
-        # plt.plot(self.timevals, self.voltagevals)                   # Comment out when testing
-        # plt.xlabel('Time (sec)')                                    # Comment out when testing
-        # plt.ylabel('Voltage (%s)' % VoltUnit)                       # Comment out when testing
-        # plt.scatter(peak_val_times, peak_val, marker='x', c='red')  # Comment out when testing
-        # plt.grid()                                                  # Comment out when testing
-        # plt.title('ECG Reading: %s' % file_name+file_type)          # Comment out when testing
-        # plt.show()                                                  # Comment out when testing
+        # Comment out when testing
+        # plt.plot(self.timevals, self.voltagevals) # Comment out when testing
+        # plt.xlabel('Time (sec)')
+        # plt.ylabel('Voltage (%s)' % VoltUnit)
+        # plt.scatter(peak_val_times, peak_val, marker='x', c='red')
+        # plt.grid()
+        # plt.title('ECG Reading: %s' % file_name+file_type)
+        # plt.show()
         # logger.info('Data plotted with marked peaks')
         return num_beats, beats
 
@@ -191,9 +198,12 @@ class HeartRateData:
         max_voltage = max(self.voltagevals)
         voltage_extremes = (min_voltage, max_voltage)
         # Need to change the units depending on user input
-        print('Minimum Lead Voltage: %s mV, Maximum Lead Voltage: %s mV' % voltage_extremes)
-        logger.info('Minimum Lead Voltage: %s %s, Maximum Lead Voltage: %s %s' % (min_voltage, VoltUnit, max_voltage,
-                                                                                  VoltUnit))
+        print('Minimum Lead Voltage: %s mV, '
+              'Maximum Lead Voltage: %s mV' % voltage_extremes)
+        logger.info('Minimum Lead Voltage: %s %s, '
+                    'Maximum Lead Voltage: %s %s' % (min_voltage,
+                                                     VoltUnit, max_voltage,
+                                                     VoltUnit))
         self.voltmin = min_voltage
         self.voltmax = max_voltage
         return voltage_extremes
@@ -213,7 +223,8 @@ class HeartRateData:
     def get_mean_hr_bpm(self):
         """ Calculates heart rate of the sample data in beats per minute
 
-        :param: self.num_beats: number of heartbeats contained in the ECG recording
+        :param: self.num_beats: number of heartbeats contained in the ECG
+        recording
         :param: self.duration: time duration of ECG recording
         :returns: avg_hr_bpm: calculated heart rate in beats per minute"""
 
@@ -231,7 +242,8 @@ class HeartRateData:
     def write_json(self, dictionary):
         """ Writes data outputs to json files
 
-        :param: dictionary: dictionary containing the data to be written to a json file
+        :param: dictionary: dictionary containing the data to be written
+        to a json file
         :returns: json file with the same name as the input file"""
 
         import json
@@ -245,8 +257,10 @@ class HeartRateData:
         time_duration = self.get_duration()
         avg_hr_bpm = self.get_mean_hr_bpm()
         ECG_outputs = {"Mean Heart Rate BPM": avg_hr_bpm,
-                       "Minimum Voltage (%s)" % self.units: voltage_extremes[0],
-                       "Maximum Voltage (%s)" % self.units: voltage_extremes[1],
+                       "Minimum Voltage (%s)" % self.units:
+                           voltage_extremes[0],
+                       "Maximum Voltage (%s)" % self.units:
+                           voltage_extremes[1],
                        "Duration of Reading": time_duration,
                        "Number of Beats": num_beats,
                        "Beat Times": str(beats)}

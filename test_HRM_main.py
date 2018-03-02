@@ -6,18 +6,17 @@ def test_HRM_main():
 
     # Test import_csv_data
     from HRM_main import import_csv_data
-    file_path = '/Users/AnthonySchneider/Desktop/bme590hrm/test_data/test_data2.csv'
+    file_path = '/Users/AnthonySchneider/Desktop/' \
+                'bme590hrm/test_data/test_data2.csv'
     time, voltage = import_csv_data(file_path)
     assert time[1] == 0.003
     assert voltage[1] == -0.345
 
-
-
     # Test class modules
-    file_path = '/Users/AnthonySchneider/Desktop/bme590hrm/test_data/test_data1.csv'
+    file_path = '/Users/AnthonySchneider/Desktop/' \
+                'bme590hrm/test_data/test_data1.csv'
     time, voltage = import_csv_data(file_path)
     test_data = HRM_main.HeartRateData(time, voltage)
-
 
     # Test find_interval
     assert test_data.find_interval() == 0.800
@@ -37,7 +36,7 @@ def test_HRM_main():
 
     # Test get_mean_hr_bpm
     beats_counted = 35
-    duration_sec= 27.775
+    duration_sec = 27.775
     average_bpm = int((beats_counted/duration_sec)*60)
     test_data.get_mean_hr_bpm()
     assert test_data.mean_hr_bpm == average_bpm
@@ -51,9 +50,3 @@ def test_HRM_main():
 
     json_read = json.load(open('/Users/AnthonySchneider/Desktop/bme590hrm/test_data/test_data1.json'))
     assert json_read == my_dictionary
-
-
-
-
-
-
