@@ -6,15 +6,13 @@ def test_HRM_main():
 
     # Test import_csv_data
     from HRM_main import import_csv_data
-    file_path = '/Users/AnthonySchneider/Desktop/' \
-                'bme590hrm/test_data/test_data2.csv'
+    file_path = 'test_data/test_data2.csv'
     time, voltage = import_csv_data(file_path)
     assert time[1] == 0.003
     assert voltage[1] == -0.345
 
     # Test class modules
-    file_path = '/Users/AnthonySchneider/Desktop/' \
-                'bme590hrm/test_data/test_data1.csv'
+    file_path = 'test_data/test_data1.csv'
     time, voltage = import_csv_data(file_path)
     test_data = HRM_main.HeartRateData(time, voltage)
 
@@ -49,4 +47,5 @@ def test_HRM_main():
     test_data.write_json(my_dictionary)
 
     json_read = json.load(open('test_data/test_data1.json'))
-    assert json_read == my_dictionary 
+
+    assert json_read == my_dictionary

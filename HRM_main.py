@@ -1,3 +1,4 @@
+import os
 # Set up logger
 import logging
 log_format = '%(levelname)s %(asctime)s %(message)s'
@@ -30,7 +31,7 @@ file_type = '.csv'
 
 # Insert desired file path and file name here
 file_name = 'test_data1'
-path = '/Users/AnthonySchneider/Desktop/bme590hrm/test_data/'
+path = 'test_data/'
 file = path + file_name + file_type
 logger.info('Intended File Path: %s' % file)
 
