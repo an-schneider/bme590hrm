@@ -49,4 +49,6 @@ def test_HRM_main():
 
     json_read = json.load(open('test_data/test_data1.json'))
 
-    assert json_read == my_dictionary
+    assert json_read == {"Name": "Anthony Schneider",
+                         "NetID": "ans52",
+                         "Major": "Biomedical Engineering"}
