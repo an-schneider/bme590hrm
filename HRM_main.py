@@ -67,7 +67,8 @@ else:
 
 class HeartRateData:
     def __init__(self, time, voltage, voltmin=None, voltmax=None,
-                 units=None, num_beats=None, beat_times=None, duration=None, mean_hr_bpm=None):
+                 units=None, num_beats=None, beat_times=None,
+                 duration=None, mean_hr_bpm=None):
         self.timevals = time
         self.voltagevals = voltage
         self.units = units
@@ -85,10 +86,10 @@ class HeartRateData:
         :param: self.voltagevals: list of voltages from imported file
         """
 
-        # plt.plot(self.timevals, self.voltagevals)    # Comment out when testing
-        # plt.xlabel('Time')                           # Comment out when testing
-        # plt.ylabel('Voltage (%s)' % self.units)      # Comment out when testing
-        # plt.show()                                   # Comment out when testing
+        # plt.plot(self.timevals, self.voltagevals) # Comment out when testing
+        # plt.xlabel('Time')                        # Comment out when testing
+        # plt.ylabel('Voltage (%s)' % self.units)   # Comment out when testing
+        # plt.show()                                # Comment out when testing
 
     def autocorrelate(self):
         """Calculates autocorrelation of input data
@@ -137,7 +138,8 @@ class HeartRateData:
         :param: self.voltagevals: list of voltages from imported file
         :param: self.timevals: list of times from imported file
         :returns: num_beats: number of beats counted in the ECG recording
-        :returns: beats: array containing the times at which these beats occurred """
+        :returns: beats: array containing the times at which
+        these beats occurred """
 
         interval_sec = self.find_interval()
         interval_indices = self.timevals.index(interval_sec)

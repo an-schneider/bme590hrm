@@ -48,5 +48,5 @@ def test_HRM_main():
                      "Major": "Biomedical Engineering"}
     test_data.write_json(my_dictionary)
 
-    json_read = json.load(open('/Users/AnthonySchneider/Desktop/bme590hrm/test_data/test_data1.json'))
-    assert json_read == my_dictionary
+    json_read = json.load(open('test_data/test_data1.json'))
+    assert json_read == my_dictionary 
