@@ -32,13 +32,6 @@ def test_HRM_main():
     test_data.get_duration()
     assert test_data.duration == 27.775     # Determined from excel sheet
 
-    # Test get_mean_hr_bpm
-    beats_counted = 35
-    duration_sec = 27.775
-    average_bpm = int((beats_counted/duration_sec)*60)
-    test_data.get_mean_hr_bpm()
-    assert test_data.mean_hr_bpm == average_bpm
-
     # Test write_json
     import json
     my_dictionary = {"Name": "Anthony Schneider",
@@ -52,3 +45,13 @@ def test_HRM_main():
     assert json_read == {"Name": "Anthony Schneider",
                          "NetID": "ans52",
                          "Major": "Biomedical Engineering"}
+
+    # Test get_mean_hr_bpm
+    beats_counted = 35
+    duration_sec = 27.775
+    average_bpm = int((beats_counted/duration_sec)*60)
+    test_data.get_mean_hr_bpm()
+    assert test_data.mean_hr_bpm == average_bpm
+
+
+test_HRM_main()
