@@ -4,4 +4,4 @@
 
 # Overview
 Code is titled HRM_main.py. It takes in a .csv file containg ECG voltages and corresponding times and outputs a .json file containing the average heart rate in BPM, the minimum and maximum recorded voltages, the time duration of the ECG reading, the number of heart beats detected in the reading, and the times at which those heart beats occurred. The code also generates a graph of the ECG trace with the detected peaks marked with a red x. A sample output of the image can be found below.  
-![Sample Output](bme590hrm/sample_output.png]
+![Sample Output](https://github.com/an-schneider/bme590hrm/blob/master/sample_output.png]
