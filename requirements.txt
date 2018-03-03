@@ -2,6 +2,3 @@ numpy
 matplotlib
 scipy
 pytest-pep8
-
-
-
