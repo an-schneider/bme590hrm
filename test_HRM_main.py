@@ -43,7 +43,8 @@ def test_HRM_main():
     import json
     my_dictionary = {"Name": "Anthony Schneider",
                      "NetID": "ans52",
-                     "Major": "Biomedical Engineering"}
+                     "Major": "Biomedical Engineering"
+                     }
     test_data.write_json(my_dictionary)
 
     json_read = json.load(open('test_data/test_data1.json'))
